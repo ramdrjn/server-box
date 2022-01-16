@@ -1,3 +1,3 @@
-module github.com/ramdrjn/server-box
+module github.com/ramdrjn/serverbox
 
 go 1.17
