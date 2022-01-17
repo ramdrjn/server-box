@@ -14,13 +14,13 @@ type Server struct {
 	Debug     bool
 }
 
-func ProcessConfFile(sbc *SbContext, confFilePath string) (*ServerBoxConf, error) {
+func ProcessConfFile(log Logger, confFilePath string) (*ServerBoxConf, error) {
 	var sbconf ServerBoxConf
 	_, err := toml.DecodeFile(confFilePath, &sbconf)
 	if err != nil {
 		pe, ok := err.(toml.ParseError)
 		if ok {
-			sbc.Log.(Logger).Error(pe.ErrorWithUsage())
+			log.Error(pe.ErrorWithUsage())
 		}
 	}
 	return &sbconf, err

@@ -1,4 +1,4 @@
-package common
+package serverbox
 
 type SbContext struct {
 	Log    interface{}
