@@ -22,7 +22,7 @@ func Initialize(debug bool, confFilePath string) error {
 	log := sbcontext.Log.(common.Logger)
 	log.Debug("server box logging initialized")
 
-	sbcontext.Conf, err = common.InitializeConfFile(&sbcontext,
+	sbcontext.Conf, err = common.ProcessConfFile(&sbcontext,
 		confFilePath)
 	if err != nil {
 		return err

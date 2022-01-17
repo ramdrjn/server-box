@@ -14,7 +14,7 @@ type Server struct {
 	Debug     bool
 }
 
-func InitializeConfFile(sbc *SbContext, confFilePath string) (*ServerBoxConf, error) {
+func ProcessConfFile(sbc *SbContext, confFilePath string) (*ServerBoxConf, error) {
 	var sbconf ServerBoxConf
 	_, err := toml.DecodeFile(confFilePath, &sbconf)
 	if err != nil {
