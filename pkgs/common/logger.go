@@ -82,14 +82,6 @@ func (l *sbLogger) Errorln(args ...interface{}) {
 	}
 }
 
-var internalLog *sbLogger
-
-func InitializeLogger(logLevel int) {
-	internalLog = new(sbLogger)
-	internalLog.logLevel = logLevel
-	internalLog.logger = log.New(os.Stdout, "serverbox: ", 0)
-}
-
-func GetLogger() Logger {
-	return internalLog
+func InitializeLogger(logLevel int) Logger {
+	return &sbLogger{logLevel, log.New(os.Stdout, "serverbox: ", 0)}
 }
