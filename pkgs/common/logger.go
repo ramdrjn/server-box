@@ -82,6 +82,6 @@ func (l *sbLogger) Errorln(args ...interface{}) {
 	}
 }
 
-func InitializeLogger(logLevel int) Logger {
+func InitializeLogger(_ *SbContext, logLevel int) Logger {
 	return &sbLogger{logLevel, log.New(os.Stdout, "serverbox: ", 0)}
 }
