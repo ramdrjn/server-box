@@ -2,14 +2,19 @@ package serverbox
 
 import (
 	"fmt"
-	"log"
-	"os"
+	"github.com/ramdrjn/serverbox/pkgs/common"
 )
 
-var logger *log.Logger
+func Initialize(debug bool, confFilePath string) {
+	fmt.Println("initializing Server box")
 
-func Initialize(){
-	fmt.Println("Server box initialized")
-	logger = log.New(os.Stdout, "serverbox: ", 0)
-	logger.Println("Server box initialized")
+	logLevel := common.InfoLevel
+	if debug {
+		logLevel = common.DebugLevel
+	}
+	common.InitializeLogger(logLevel)
+	log := common.GetLogger()
+	log.Debug("server box logging initialized")
+
+	//common.InitializeConfFile(confFilePath)
 }
