@@ -25,6 +25,7 @@ type Logger interface {
 
 type sbLogger struct {
 	logLevel int
+	module   string
 	logger   *log.Logger
 }
 
@@ -82,6 +83,6 @@ func (l *sbLogger) Errorln(args ...interface{}) {
 	}
 }
 
-func InitializeLogger(logLevel int) Logger {
-	return &sbLogger{logLevel, log.New(os.Stdout, "serverbox: ", 0)}
+func InitializeLogger(module string, logLevel int) Logger {
+	return &sbLogger{logLevel, module, log.New(os.Stdout, module+": ", 0)}
 }

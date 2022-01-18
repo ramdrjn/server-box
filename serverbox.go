@@ -3,6 +3,7 @@ package serverbox
 import (
 	"fmt"
 	"github.com/ramdrjn/serverbox/pkgs/common"
+	. "github.com/ramdrjn/serverbox/internal"
 )
 
 func Initialize(debug bool, confFilePath string) error {
@@ -15,16 +16,15 @@ func Initialize(debug bool, confFilePath string) error {
 	if debug {
 		logLevel = common.DebugLevel
 	}
-	sbcontext.Log = common.InitializeLogger(logLevel)
+	sbcontext.Log = common.InitializeLogger("serverbox", logLevel)
 	log := sbcontext.Log.(common.Logger)
 	log.Debug("server box logging initialized")
 
-	sbcontext.Conf, err = common.ProcessConfFile(log, confFilePath)
+	sbcontext.Conf, err = ProcessConfFile(&sbcontext, confFilePath)
 	if err != nil {
 		return err
 	}
-	log.Debug("configuration read from file ",
-		sbcontext.Conf.(*common.ServerBoxConf))
+	log.Debug("configuration read from file ", sbcontext.Conf)
 
 	sbcontext.Stats, err = InitializeStatistics(&sbcontext)
 	if err != nil {

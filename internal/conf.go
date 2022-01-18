@@ -1,4 +1,4 @@
-package common
+package serverbox
 
 import (
 	"github.com/BurntSushi/toml"
@@ -14,13 +14,13 @@ type Server struct {
 	Debug     bool
 }
 
-func ProcessConfFile(log Logger, confFilePath string) (*ServerBoxConf, error) {
+func ProcessConfFile(sbc *SbContext, confFilePath string) (*ServerBoxConf, error) {
 	var sbconf ServerBoxConf
 	_, err := toml.DecodeFile(confFilePath, &sbconf)
 	if err != nil {
 		pe, ok := err.(toml.ParseError)
 		if ok {
-			log.Error(pe.ErrorWithUsage())
+			sbc.Log.Error(pe.ErrorWithUsage())
 		}
 	}
 	return &sbconf, err

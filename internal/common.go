@@ -1,8 +1,12 @@
 package serverbox
 
+import (
+	"github.com/ramdrjn/serverbox/pkgs/common"
+)
+
 type SbContext struct {
-	Log    interface{}
-	Conf   interface{}
+	Log    common.Logger
+	Conf   *ServerBoxConf
 	Stats  interface{}
 	State  interface{}
 	Server interface{}
