@@ -5,10 +5,10 @@ import (
 )
 
 type ServerBoxConf struct {
-	Servers map[string]Server
+	Servers map[string]Server `toml:"servers"`
 }
 
-type Server struct {
+type ServerConf struct {
 	Bind_Ip   string
 	Bind_Port uint32
 	Debug     bool
