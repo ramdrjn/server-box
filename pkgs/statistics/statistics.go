@@ -1,12 +1,35 @@
 package statistics
 
 import (
+	"fmt"
 	"github.com/ramdrjn/serverbox/pkgs/common"
+	. "github.com/ramdrjn/serverbox/pkgs/statistics/internal"
 )
 
-type Statistics interface {
-}
+func Initialize(debug bool, confFilePath string) error {
+	var statscontext StatsContext
+	var err error
 
-func InitializeStatistics(sbc *common.SbContext) (Statistics, error) {
-	return nil, nil
+	fmt.Println("initializing statistics")
+
+	logLevel := common.InfoLevel
+	if debug {
+		logLevel = common.DebugLevel
+	}
+	statscontext.Log = common.InitializeLogger("statistics", logLevel)
+	log := statscontext.Log.(common.Logger)
+	log.Debug("statistics logging initialized")
+
+	statscontext.Conf, err = ProcessConfFile(&statscontext, confFilePath)
+	if err != nil {
+		return err
+	}
+	log.Debug("configuration read from file ", statscontext.Conf)
+
+	err = InitializeGrpcServer(&statscontext)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
