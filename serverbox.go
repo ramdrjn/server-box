@@ -2,8 +2,8 @@ package serverbox
 
 import (
 	"fmt"
-	"github.com/ramdrjn/serverbox/pkgs/common"
 	. "github.com/ramdrjn/serverbox/internal"
+	"github.com/ramdrjn/serverbox/pkgs/common"
 )
 
 func Initialize(debug bool, confFilePath string) error {

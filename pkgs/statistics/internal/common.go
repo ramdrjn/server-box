@@ -5,6 +5,6 @@ import (
 )
 
 type StatsContext struct {
-	Log    common.Logger
-	Conf   *StatisticsConf
+	Log  common.Logger
+	Conf *StatisticsConf
 }

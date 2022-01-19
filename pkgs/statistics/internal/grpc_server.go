@@ -1,11 +1,16 @@
 package statistics
 
 import (
-	"net"
+	"context"
 	"google.golang.org/grpc"
+	"net"
 )
 
 func InitializeGrpcServer(stc *StatsContext) error {
+
+}
+
+func StartGrpcServer(ctx context.Context) error {
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", *port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
