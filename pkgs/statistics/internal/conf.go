@@ -5,8 +5,8 @@ import (
 )
 
 type StatisticsConf struct {
-	Bind_Ip   string
-	Bind_Port uint32
+	Host string
+	Port uint32
 }
 
 func ProcessConfFile(stc *StatsContext, confFilePath string) (*StatisticsConf, error) {

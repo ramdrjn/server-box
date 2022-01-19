@@ -1,35 +1,24 @@
 package statistics
 
 import (
-	"context"
+	"fmt"
 	"google.golang.org/grpc"
 	"net"
 )
 
 func InitializeGrpcServer(stc *StatsContext) error {
-
+	host := fmt.Sprintf("%s:%d", stc.Conf.Host, stc.Conf.Port)
+	return StartGrpcServer(host)
 }
 
-func StartGrpcServer(ctx context.Context) error {
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", *port))
+func StartGrpcServer(host string) error {
+	lis, err := net.Listen("tcp", host)
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		Log.Error("grpc server listen failed: %v", err)
+		return err
 	}
-	var opts []grpc.ServerOption
-	if *tls {
-		if *certFile == "" {
-			*certFile = data.Path("x509/server_cert.pem")
-		}
-		if *keyFile == "" {
-			*keyFile = data.Path("x509/server_key.pem")
-		}
-		creds, err := credentials.NewServerTLSFromFile(*certFile, *keyFile)
-		if err != nil {
-			log.Fatalf("Failed to generate credentials %v", err)
-		}
-		opts = []grpc.ServerOption{grpc.Creds(creds)}
-	}
-	grpcServer := grpc.NewServer(opts...)
-	pb.RegisterRouteGuideServer(grpcServer, newServer())
+	grpcServer := grpc.NewServer()
+	RegisterService_SB_Stats(grpcServer)
 	grpcServer.Serve(lis)
+	return nil
 }

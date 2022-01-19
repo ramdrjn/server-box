@@ -20,6 +20,9 @@ func Initialize(debug bool, confFilePath string) error {
 	log := statscontext.Log.(common.Logger)
 	log.Debug("statistics logging initialized")
 
+	//Update internal log so that its accessible everwhere
+	Log = log
+
 	statscontext.Conf, err = ProcessConfFile(&statscontext, confFilePath)
 	if err != nil {
 		return err

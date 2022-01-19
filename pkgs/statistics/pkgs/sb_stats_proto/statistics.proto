@@ -6,7 +6,11 @@ package sb_stats_proto;
 
 message RegisterReq {
   string uuid = 1;
-  string type = 2;
+  enum Type {
+    SERVER = 0;
+    STATE = 1;
+  }
+  Type type = 2;
 }
 
 message RegisterRes {
