@@ -20,6 +20,9 @@ func Initialize(debug bool, confFilePath string) error {
 	log := sbcontext.Log.(common.Logger)
 	log.Debug("server box logging initialized")
 
+	//Update internal log so that its accessible everwhere
+	Log = log
+
 	sbcontext.Conf, err = ProcessConfFile(&sbcontext, confFilePath)
 	if err != nil {
 		return err
