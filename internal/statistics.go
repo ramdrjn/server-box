@@ -5,7 +5,11 @@ type Statistics struct {
 }
 
 func InitializeStatistics(sbc *SbContext) (statistics *Statistics, err error) {
-	err = nil
-	statistics = new(Statistics)
-	return statistics, err
+	if (sbc.Conf.Stats.Enabled == false) {
+		Log.Debugln("statistics not configured")
+		return nil, nil
+	}
+
+	statistics = &Statistics{true}
+	return statistics, nil
 }

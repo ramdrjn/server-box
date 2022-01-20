@@ -5,13 +5,20 @@ import (
 )
 
 type ServerBoxConf struct {
-	Servers map[string]Server `toml:"servers"`
+	Servers map[string]server
+	Stats   statistics
 }
 
-type ServerConf struct {
+type server struct {
 	Bind_Ip   string
-	Bind_Port uint32
+	Bind_Port uint16
 	Debug     bool
+}
+
+type statistics struct {
+	Host    string
+	Port    uint16
+	Enabled bool
 }
 
 func ProcessConfFile(sbc *SbContext, confFilePath string) (*ServerBoxConf, error) {

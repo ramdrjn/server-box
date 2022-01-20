@@ -11,3 +11,5 @@ type SbContext struct {
 	State  interface{}
 	Server interface{}
 }
+
+var Log common.Logger
