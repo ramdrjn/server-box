@@ -5,8 +5,8 @@ import (
 )
 
 type ServerBoxConf struct {
-	Servers map[string]server
-	Stats   statistics
+	Servers    map[string]server
+	Statistics statistics
 }
 
 type server struct {

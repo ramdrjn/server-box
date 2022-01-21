@@ -7,7 +7,7 @@ import (
 type SbContext struct {
 	Log    common.Logger
 	Conf   *ServerBoxConf
-	Stats  interface{}
+	Stats  *Statistics
 	State  interface{}
 	Server interface{}
 }
