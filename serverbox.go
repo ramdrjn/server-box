@@ -44,5 +44,7 @@ func Initialize(debug bool, confFilePath string) error {
 		return err
 	}
 
+	ShutDownStatistics(&sbcontext)
+
 	return nil
 }
