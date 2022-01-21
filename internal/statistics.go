@@ -1,6 +1,7 @@
 package serverbox
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	pb "github.com/ramdrjn/serverbox/pkgs/statistics/pkgs/sb_stats_proto"
@@ -9,8 +10,8 @@ import (
 )
 
 type Statistics struct {
-	conn  *grpc.ClientConn
-	stats pb.StatisticsClient
+	conn       *grpc.ClientConn
+	statistics pb.StatisticsClient
 }
 
 func getStatsClient(conn *grpc.ClientConn) (pb.StatisticsClient, error) {
@@ -61,4 +62,28 @@ func ShutDownStatistics(sbc *SbContext) (err error) {
 	sbc.Stats.conn.Close()
 
 	return nil
+}
+
+func (s *Statistics) RegisterForStats(uuid string, t string) error {
+	var regType pb.RegisterReq_Type
+	switch {
+	case t == "server":
+		regType = pb.RegisterReq_SERVER
+	case t == "state":
+		regType = pb.RegisterReq_STATE
+	default:
+		Log.Error("invalid type for registration")
+		return errors.New("invalid type")
+	}
+	req := &pb.RegisterReq{Uuid: uuid, Type: regType}
+	ctx := context.TODO()
+	res, err := s.statistics.RegisterForStats(ctx, req)
+	if err != nil {
+		Log.Error("registration failed for type: ", t)
+	}
+	if err == nil && res.Enrolled == false {
+		Log.Error("registration not enrolled for type: ", t)
+		err = errors.New("registration not enrolled")
+	}
+	return err
 }
