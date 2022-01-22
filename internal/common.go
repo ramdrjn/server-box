@@ -7,7 +7,7 @@ import (
 type SbContext struct {
 	Log     common.Logger
 	Conf    ServerBoxConf
-	Servers map[string]Server
+	Servers map[string]*Server
 }
 
 var Log common.Logger
@@ -17,20 +17,20 @@ type ServerBoxConf struct {
 }
 
 type server struct {
-	Bind_Ip    string
-	Bind_Port  uint16
+	Bind_ip    string
+	Bind_port  uint16
 	Debug      bool
-	Statistics StatisticsConf
-	State      StateConf
+	Statistics statistics
+	State      state
 }
 
-type StatisticsConf struct {
+type statistics struct {
 	Host    string
 	Port    uint16
 	Enabled bool
 }
 
-type StateConf struct {
+type state struct {
 	Host    string
 	Port    uint16
 	Enabled bool

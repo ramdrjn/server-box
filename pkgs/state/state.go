@@ -1,6 +1,5 @@
 package state
 
-
 import (
 	"fmt"
 	"github.com/ramdrjn/serverbox/pkgs/common"
@@ -27,7 +26,7 @@ func Initialize(debug bool, confFilePath string) error {
 	err = common.ProcessConfFile(confFilePath, &statecontext.Conf)
 	if err != nil {
 		statecontext.Log.Error("configuration file %s failed: ",
-                        confFilePath, err)
+			confFilePath, err)
 		return err
 	}
 

@@ -5,7 +5,7 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-func ProcessConfFile(confFile string, confObj interface{}) (error) {
+func ProcessConfFile(confFile string, confObj interface{}) error {
 	_, err := toml.DecodeFile(confFile, confObj)
 	if err != nil {
 		pe, ok := err.(toml.ParseError)

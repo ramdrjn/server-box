@@ -1,40 +1,62 @@
 package serverbox
 
+import "fmt"
+
 type Server struct {
 	name     string
+	uuid     string
 	bindIp   string
 	bindPort uint16
 	stats    Statistics
 	state    State
+	enabled  bool
+}
+
+func generateUuid(name string, ip string, port uint16) (string, error) {
+	return fmt.Sprintf("%s@%s:%d", name, ip, port), nil
 }
 
 func InitializeServers(sbc *SbContext) (err error) {
+	sbc.Servers = make(map[string]*Server)
+
 	for serverName, serverConf := range sbc.Conf.Servers {
-		server := Server.New()
+		server := new(Server)
 		server.name = serverName
 		server.bindIp = serverConf.Bind_ip
 		server.bindPort = serverConf.Bind_port
 
-		err = InitializeStatistics(&server.stats,
-			&serverConf.Statistics)
-		if err != nil {
-			return err
+		server.uuid, _ = generateUuid(serverName, server.bindIp,
+			server.bindPort)
+
+		statsConf := serverConf.Statistics
+		if statsConf.Enabled {
+			host := fmt.Sprintf("%s:%d", statsConf.Host,
+				statsConf.Port)
+			err = InitializeStatistics(server.uuid,
+				host, &server.stats)
+			if err == nil {
+				server.stats.RegisterForStats()
+			}
 		}
-
-		err = InitializeState(&server.state, &serverConf.State)
-		if err != nil {
-			return err
+		stateConf := serverConf.State
+		if stateConf.Enabled {
+			host := fmt.Sprintf("%s:%d", stateConf.Host,
+				stateConf.Port)
+			err = InitializeState(server.uuid,
+				host, &server.state)
+			if err == nil {
+				server.state.RegisterForState()
+			}
 		}
-
-		server.stats.RegisterForStats("test", "server")
-		server.state.RegisterForState("test", "server")
-
-		sbc.Servers[name] = server
+		sbc.Servers[serverName] = server
 	}
 	return err
 }
 
 func ShutDownServers(sbc *SbContext) (err error) {
-	ShutDownStatistics(&sbcontext)
-	ShutDownState(&sbcontext)
+	for _, server := range sbc.Servers {
+		ShutDownStatistics(&server.stats)
+		ShutDownState(&server.state)
+	}
+	return nil
 }

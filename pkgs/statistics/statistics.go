@@ -22,11 +22,11 @@ func Initialize(debug bool, confFilePath string) error {
 	Log = statscontext.Log
 
 	statscontext.Log.Debug("statistics logging initialized")
-	
+
 	err = common.ProcessConfFile(confFilePath, &statscontext.Conf)
 	if err != nil {
 		statscontext.Log.Error("configuration file %s failed: ",
-                        confFilePath, err)
+			confFilePath, err)
 		return err
 	}
 
