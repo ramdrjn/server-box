@@ -23,7 +23,7 @@ func Initialize(debug bool, confFilePath string) error {
 
 	statscontext.Log.Debug("statistics logging initialized")
 	
-	err = common.ProcessConfFile(confFilePath, &statscontext)
+	err = common.ProcessConfFile(confFilePath, &statscontext.Conf)
 	if err != nil {
 		statscontext.Log.Error("configuration file %s failed: ",
                         confFilePath, err)
@@ -34,6 +34,8 @@ func Initialize(debug bool, confFilePath string) error {
 	if err != nil {
 		return err
 	}
+
+	ShutDownGrpcServer(&statscontext)
 
 	return nil
 }
