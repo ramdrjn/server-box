@@ -20,6 +20,7 @@ type server struct {
 	Bind_ip    string
 	Bind_port  uint16
 	Debug      bool
+	Type       string
 	Statistics statistics
 	State      state
 }

@@ -1,15 +1,34 @@
 package serverbox
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
+
+type ServerType uint8
+
+const (
+	INVALID = iota
+	HTTP_SERVER
+)
 
 type Server struct {
 	name     string
+	sType    ServerType
 	uuid     string
 	bindIp   string
 	bindPort uint16
 	stats    Statistics
 	state    State
 	enabled  bool
+}
+
+func convertServerType(sType string) (ServerType, error) {
+	switch sType {
+	case "http":
+		return HTTP_SERVER, nil
+	}
+	return INVALID, errors.New("invalid server type")
 }
 
 func generateUuid(name string, ip string, port uint16) (string, error) {
@@ -24,6 +43,7 @@ func InitializeServers(sbc *SbContext) (err error) {
 		server.name = serverName
 		server.bindIp = serverConf.Bind_ip
 		server.bindPort = serverConf.Bind_port
+		server.sType, _ = convertServerType(serverConf.Type)
 
 		server.uuid, _ = generateUuid(serverName, server.bindIp,
 			server.bindPort)
