@@ -17,29 +17,30 @@ func Initialize(debug bool, confFilePath string) error {
 		logLevel = common.DebugLevel
 	}
 	sbcontext.Log = common.InitializeLogger("serverbox", logLevel)
-	log := sbcontext.Log.(common.Logger)
-	log.Debug("server box logging initialized")
 
 	//Update internal log so that its accessible everwhere
-	Log = log
+	Log = sbcontext.Log
 
-	sbcontext.Conf, err = ProcessConfFile(&sbcontext, confFilePath)
-	if err != nil {
-		return err
-	}
-	log.Debug("configuration read from file ", sbcontext.Conf)
+	sbcontext.Log.Debug("server box logging initialized")
 
-	sbcontext.Stats, err = InitializeStatistics(&sbcontext)
+	err = common.ProcessConfFile(confFilePath, &sbcontext.Conf)
 	if err != nil {
-		return err
-	}
-
-	sbcontext.State, err = InitializeState(&sbcontext)
-	if err != nil {
+		sbcontext.Log.Error("configuration file %s failed: ",
+			confFilePath, err)
 		return err
 	}
 
-	sbcontext.Server, err = InitializeServer(&sbcontext)
+	err = InitializeStatistics(&sbcontext)
+	if err != nil {
+		return err
+	}
+
+	err = InitializeState(&sbcontext)
+	if err != nil {
+		return err
+	}
+
+	err = InitializeServer(&sbcontext)
 	if err != nil {
 		return err
 	}

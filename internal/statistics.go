@@ -23,11 +23,11 @@ func getStatsClient(conn *grpc.ClientConn) (pb.StatisticsClient, error) {
 	return cli, nil
 }
 
-func InitializeStatistics(sbc *SbContext) (statistics *Statistics, err error) {
+func InitializeStatistics(sbc *SbContext) (err error) {
 	var opts []grpc.DialOption
 	if sbc.Conf.Statistics.Enabled == false {
 		sbc.Log.Debugln("init: statistics not configured")
-		return nil, nil
+		return nil
 	}
 
 	host := fmt.Sprintf("%s:%d", sbc.Conf.Statistics.Host,
@@ -43,14 +43,15 @@ func InitializeStatistics(sbc *SbContext) (statistics *Statistics, err error) {
 
 		//TODO - Retry connection.
 
-		return nil, err
+		return err
 	}
 
 	cli, _ := getStatsClient(conn)
 
-	statistics = &Statistics{conn, cli}
+	sbc.Stats.conn = conn
+	sbc.Stats.statistics = cli
 
-	return statistics, err
+	return err
 }
 
 func ShutDownStatistics(sbc *SbContext) (err error) {

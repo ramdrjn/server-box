@@ -4,9 +4,8 @@ type Server struct {
 	enabled bool
 }
 
-func InitializeServer(sbc *SbContext) (server *Server, err error) {
+func InitializeServer(sbc *SbContext) (err error) {
 	err = nil
-	server = new(Server)
 	sbc.Stats.RegisterForStats("test", "server")
-	return server, err
+	return err
 }

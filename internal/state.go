@@ -4,8 +4,7 @@ type State struct {
 	enabled bool
 }
 
-func InitializeState(sbc *SbContext) (state *State, err error) {
+func InitializeState(sbc *SbContext) (err error) {
 	err = nil
-	state = new(State)
-	return state, err
+	return err
 }
