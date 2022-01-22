@@ -6,12 +6,12 @@ import (
 
 type StatsContext struct {
 	Log  common.Logger
-	Conf *StatisticsConf
+	Conf statisticsConf
 }
 
 var Log common.Logger
 
-type StatisticsConf struct {
+type statisticsConf struct {
 	Host string
 	Port uint32
 }
