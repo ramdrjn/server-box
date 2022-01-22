@@ -30,22 +30,12 @@ func Initialize(debug bool, confFilePath string) error {
 		return err
 	}
 
-	err = InitializeStatistics(&sbcontext)
+	err = InitializeServers(&sbcontext)
 	if err != nil {
 		return err
 	}
 
-	err = InitializeState(&sbcontext)
-	if err != nil {
-		return err
-	}
-
-	err = InitializeServer(&sbcontext)
-	if err != nil {
-		return err
-	}
-
-	ShutDownStatistics(&sbcontext)
+	ShutDownServers(&sbcontext)
 
 	return nil
 }

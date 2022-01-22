@@ -12,6 +12,7 @@ import (
 type Statistics struct {
 	conn       *grpc.ClientConn
 	statistics pb.StatisticsClient
+	enabled    bool
 }
 
 func getStatsClient(conn *grpc.ClientConn) (pb.StatisticsClient, error) {
@@ -23,7 +24,7 @@ func getStatsClient(conn *grpc.ClientConn) (pb.StatisticsClient, error) {
 	return cli, nil
 }
 
-func InitializeStatistics(sbc *SbContext) (err error) {
+func InitializeStatistics(stats *Statistics) (err error) {
 	var opts []grpc.DialOption
 	if sbc.Conf.Statistics.Enabled == false {
 		sbc.Log.Debugln("init: statistics not configured")
@@ -54,7 +55,7 @@ func InitializeStatistics(sbc *SbContext) (err error) {
 	return err
 }
 
-func ShutDownStatistics(sbc *SbContext) (err error) {
+func ShutDownStatistics(stats *Statistics) (err error) {
 	if sbc.Conf.Statistics.Enabled == false {
 		sbc.Log.Debugln("shut: statistics not configured")
 		return nil
