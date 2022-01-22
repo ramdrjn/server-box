@@ -17,17 +17,18 @@ func Initialize(debug bool, confFilePath string) error {
 		logLevel = common.DebugLevel
 	}
 	statscontext.Log = common.InitializeLogger("statistics", logLevel)
-	log := statscontext.Log.(common.Logger)
-	log.Debug("statistics logging initialized")
 
 	//Update internal log so that its accessible everwhere
-	Log = log
+	Log = statscontext.Log
 
-	statscontext.Conf, err = ProcessConfFile(&statscontext, confFilePath)
+	statscontext.Log.Debug("statistics logging initialized")
+	
+	err = common.ProcessConfFile(confFilePath, &statscontext)
 	if err != nil {
+		statscontext.Log.Error("configuration file %s failed: ",
+                        confFilePath, err)
 		return err
 	}
-	log.Debug("configuration read from file ", statscontext.Conf)
 
 	err = InitializeGrpcServer(&statscontext)
 	if err != nil {

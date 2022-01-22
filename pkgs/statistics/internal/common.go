@@ -10,3 +10,8 @@ type StatsContext struct {
 }
 
 var Log common.Logger
+
+type StatisticsConf struct {
+	Host string
+	Port uint32
+}
