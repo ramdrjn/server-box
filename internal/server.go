@@ -14,6 +14,8 @@ const (
 
 type serverInstance interface {
 	InitializeServerInstance() error
+	RunServerInstance() error
+	ShutDownServerInstance() error
 }
 
 type Server struct {
@@ -102,8 +104,19 @@ func InitializeServers(sbc *SbContext) (err error) {
 	return err
 }
 
+func RunServers(sbc *SbContext) (err error) {
+	for _, server := range sbc.Servers {
+		err = server.serverInstance.RunServerInstance()
+		if err != nil {
+			break
+		}
+	}
+	return err
+}
+
 func ShutDownServers(sbc *SbContext) (err error) {
 	for _, server := range sbc.Servers {
+		server.serverInstance.ShutDownServerInstance()
 		ShutDownStatistics(&server.stats)
 		ShutDownState(&server.state)
 	}

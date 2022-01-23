@@ -6,9 +6,8 @@ import (
 	"github.com/ramdrjn/serverbox/pkgs/common"
 )
 
-func Initialize(debug bool, confFilePath string) error {
-	var sbcontext SbContext
-	var err error
+func Initialize(debug bool, confFilePath string) (sbcontext *SbContext, err error) {
+	sbcontext = new(SbContext)
 
 	fmt.Println("initializing Server box")
 
@@ -27,15 +26,20 @@ func Initialize(debug bool, confFilePath string) error {
 	if err != nil {
 		sbcontext.Log.Error("configuration file %s failed: ",
 			confFilePath, err)
-		return err
+		return nil, err
 	}
 
-	err = InitializeServers(&sbcontext)
-	if err != nil {
-		return err
-	}
+	err = InitializeServers(sbcontext)
 
-	ShutDownServers(&sbcontext)
+	return sbcontext, err
+}
 
-	return nil
+func Run(sbcontext *SbContext) (err error) {
+	err = RunServers(sbcontext)
+	return err
+}
+
+func ShutDown(sbcontext *SbContext) (err error) {
+	err = ShutDownServers(sbcontext)
+	return err
 }

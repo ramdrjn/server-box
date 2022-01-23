@@ -6,13 +6,13 @@ import (
 
 type SbContext struct {
 	Log     common.Logger
-	Conf    ServerBoxConf
+	Conf    serverBoxConf
 	Servers map[string]*Server
 }
 
 var Log common.Logger
 
-type ServerBoxConf struct {
+type serverBoxConf struct {
 	Servers map[string]server
 }
 

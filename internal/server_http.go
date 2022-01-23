@@ -20,3 +20,19 @@ func (s *ServerHttp) InitializeServerInstance() error {
 
 	return nil
 }
+
+func (s *ServerHttp) RunServerInstance() error {
+	err := s.server.state.ReportState("up")
+	if err != nil {
+		return err
+	}
+	return err
+}
+
+func (s *ServerHttp) ShutDownServerInstance() error {
+	err := s.server.state.ReportState("down")
+	if err != nil {
+		return err
+	}
+	return err
+}
