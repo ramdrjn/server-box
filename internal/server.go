@@ -73,7 +73,6 @@ func InitializeServers(sbc *SbContext) (err error) {
 				host, &server.stats)
 			if err != nil {
 				break
-				server.stats.RegisterForStats()
 			}
 		}
 		stateConf := serverConf.State
@@ -84,7 +83,6 @@ func InitializeServers(sbc *SbContext) (err error) {
 				host, &server.state)
 			if err != nil {
 				break
-				server.state.RegisterForState()
 			}
 		}
 
