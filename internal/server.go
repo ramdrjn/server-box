@@ -8,27 +8,40 @@ import (
 type ServerType uint8
 
 const (
-	INVALID = iota
-	HTTP_SERVER
+	invalid_server = iota
+	http_server
 )
 
+type serverInstance interface {
+	InitializeServerInstance() error
+}
+
 type Server struct {
-	name     string
-	sType    ServerType
-	uuid     string
-	bindIp   string
-	bindPort uint16
-	stats    Statistics
-	state    State
-	enabled  bool
+	name           string
+	sType          ServerType
+	uuid           string
+	bindIp         string
+	bindPort       uint16
+	stats          Statistics
+	state          State
+	serverInstance *serverInstance
+	enabled        bool
 }
 
 func convertServerType(sType string) (ServerType, error) {
 	switch sType {
 	case "http":
-		return HTTP_SERVER, nil
+		return http_server, nil
 	}
-	return INVALID, errors.New("invalid server type")
+	return invalid_server, errors.New("invalid server type")
+}
+
+func getServerInstance(sType ServerType) (serverInstance, error) {
+	switch sType {
+	case http_server:
+		return &ServerHttp{}, nil
+	}
+	return nil, errors.New("invalid server type")
 }
 
 func generateUuid(name string, ip string, port uint16) (string, error) {
