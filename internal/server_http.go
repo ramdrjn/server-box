@@ -13,6 +13,10 @@ func (s *ServerHttp) InitializeServerInstance() error {
 	if err != nil {
 		return err
 	}
+	err = s.server.state.ReportState("maintanence")
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
