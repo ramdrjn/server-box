@@ -1,0 +1,22 @@
+
+syntax = "proto3";
+
+option go_package = "./;sb_stats_proto";
+package sb_stats_proto;
+
+message RegisterReq {
+  string uuid = 1;
+  enum Type {
+    SERVER = 0;
+    STATE = 1;
+  }
+  Type type = 2;
+}
+
+message RegisterRes {
+  bool enrolled = 1;
+}
+
+service Statistics {
+  rpc RegisterForStats(RegisterReq) returns (RegisterRes) {}
+}
