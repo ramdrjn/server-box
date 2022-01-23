@@ -1,0 +1,36 @@
+
+syntax = "proto3";
+
+option go_package = "./;sb_state_proto";
+package sb_state_proto;
+
+message RegisterReq {
+  string uuid = 1;
+  enum Type {
+    SERVER = 0;
+  }
+  Type type = 2;
+}
+
+message RegisterRes {
+}
+
+message ReportReq {
+  string target_uuid = 1;
+  enum State {
+    UP = 0;
+    DOWN = 1;
+    MAINTANENCE = 2;
+  }
+  State state = 2;
+  string reportee_uuid = 3;
+  string reason = 4;
+}
+
+message ReportRes {
+}
+
+service State {
+  rpc RegisterForState(RegisterReq) returns (RegisterRes) {}
+  rpc ReportState(ReportReq) returns (ReportRes) {}
+}
