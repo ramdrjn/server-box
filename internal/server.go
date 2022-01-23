@@ -24,7 +24,7 @@ type Server struct {
 	bindPort       uint16
 	stats          Statistics
 	state          State
-	serverInstance *serverInstance
+	serverInstance serverInstance
 	enabled        bool
 }
 
@@ -36,10 +36,10 @@ func convertServerType(sType string) (ServerType, error) {
 	return invalid_server, errors.New("invalid server type")
 }
 
-func getServerInstance(sType ServerType) (serverInstance, error) {
-	switch sType {
+func getServerInstance(s *Server) (serverInstance, error) {
+	switch s.sType {
 	case http_server:
-		return &ServerHttp{}, nil
+		return &ServerHttp{server: s}, nil
 	}
 	return nil, errors.New("invalid server type")
 }
@@ -56,7 +56,11 @@ func InitializeServers(sbc *SbContext) (err error) {
 		server.name = serverName
 		server.bindIp = serverConf.Bind_ip
 		server.bindPort = serverConf.Bind_port
-		server.sType, _ = convertServerType(serverConf.Type)
+
+		server.sType, err = convertServerType(serverConf.Type)
+		if err != nil {
+			break
+		}
 
 		server.uuid, _ = generateUuid(serverName, server.bindIp,
 			server.bindPort)
@@ -67,7 +71,8 @@ func InitializeServers(sbc *SbContext) (err error) {
 				statsConf.Port)
 			err = InitializeStatistics(server.uuid,
 				host, &server.stats)
-			if err == nil {
+			if err != nil {
+				break
 				server.stats.RegisterForStats()
 			}
 		}
@@ -77,10 +82,23 @@ func InitializeServers(sbc *SbContext) (err error) {
 				stateConf.Port)
 			err = InitializeState(server.uuid,
 				host, &server.state)
-			if err == nil {
+			if err != nil {
+				break
 				server.state.RegisterForState()
 			}
 		}
+
+		server.serverInstance, err = getServerInstance(server)
+		if err != nil {
+			break
+		}
+
+		err = server.serverInstance.InitializeServerInstance()
+		if err != nil {
+			break
+		}
+
+		server.enabled = true
 		sbc.Servers[serverName] = server
 	}
 	return err
