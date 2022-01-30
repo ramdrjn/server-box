@@ -16,23 +16,23 @@ type route struct {
 
 func (r route) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	f := r.handlers[req.Method]
-	if f {
-		f(res, req)
+	if f != nil {
+		f(r.userdata, res, req)
 	}
 }
 
 type router struct {
-	//routes []route
-	val bool
+	routes []route
 }
 
 func (r *router) RegisterRoute(pattern string, methods string, handler routeHandler, userdata interface{}) error {
-	route := route{userdata: userdata, pattpattern}
-	for _, method = range strings.Spit(methods, ",") {
+	route := route{userdata: userdata, pattern: pattern}
+	route.handlers = make(map[string]routeHandler)
+	for _, method := range strings.Split(methods, ",") {
 		route.handlers[method] = handler
 	}
 	//mux.Handle(pattern, r)
-	//r.routes = append(r.routes, route)
+	r.routes = append(r.routes, route)
 	return nil
 }
 

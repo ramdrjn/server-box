@@ -10,7 +10,7 @@ type msg struct {
 	reply string
 }
 
-func routeHandler(userdata interface{}, res http.ResponseWriter,
+func testRouteHandler(userdata interface{}, res http.ResponseWriter,
 	req *http.Request) {
 	s, ok := userdata.(msg)
 	if ok {
@@ -20,5 +20,5 @@ func routeHandler(userdata interface{}, res http.ResponseWriter,
 
 func TestRegisterRoute(t *testing.T) {
 	r := NewRouter()
-	r.RegisterRoute("/test", "get", routeHandler, msg{"test-DONE"})
+	r.RegisterRoute("/test", "get", testRouteHandler, msg{"test-DONE"})
 }
