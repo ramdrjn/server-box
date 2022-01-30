@@ -51,6 +51,9 @@ func ShutDownState(state *State) error {
 }
 
 func (s *State) RegisterForState() error {
+	if s.enabled == false {
+		return nil
+	}
 	req := &pb.RegisterReq{Uuid: s.uuid, Type: pb.RegisterReq_SERVER}
 	ctx := context.TODO()
 	_, err := s.state.RegisterForState(ctx, req)
@@ -73,6 +76,9 @@ func convertState(state string) (pb.ReportReq_State, error) {
 }
 
 func (s *State) ReportState(state string) error {
+	if s.enabled == false {
+		return nil
+	}
 	stateVal, err := convertState(state)
 	if err != nil {
 		Log.Error(err)

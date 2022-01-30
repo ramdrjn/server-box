@@ -1,8 +1,8 @@
 package serverbox
 
 import (
-	"testing"
 	. "github.com/ramdrjn/serverbox/internal"
+	"testing"
 )
 
 var sbcontext *SbContext
