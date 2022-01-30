@@ -51,7 +51,7 @@ func ShutDownStatistics(stats *Statistics) error {
 }
 
 func (s *Statistics) RegisterForStats() error {
-	if stats.enabled == false {
+	if s.enabled == false {
 		return nil
 	}
 	req := &pb.RegisterReq{Uuid: s.uuid, Type: pb.RegisterReq_SERVER}
