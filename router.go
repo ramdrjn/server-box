@@ -21,16 +21,21 @@ func (r route) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
-type Router struct {
-	routes []route
+type router struct {
+	//routes []route
+	val bool
 }
 
-func (R *Router) RegisterRoute(pattern string, methods string, handler routeHandler, userdata interface{}) error {
-	r := route{userdata: userdata, pattpattern}
+func (r *router) RegisterRoute(pattern string, methods string, handler routeHandler, userdata interface{}) error {
+	route := route{userdata: userdata, pattpattern}
 	for _, method = range strings.Spit(methods, ",") {
-		r.handlers[method] = handler
+		route.handlers[method] = handler
 	}
 	//mux.Handle(pattern, r)
-	R.routes = append(R.routes, r)
+	//r.routes = append(r.routes, route)
 	return nil
+}
+
+func NewRouter() *router {
+	return new(router)
 }
