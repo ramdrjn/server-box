@@ -2,7 +2,6 @@ package serverbox
 
 import (
 	. "github.com/ramdrjn/serverbox/internal"
-	"github.com/ramdrjn/serverbox/pkgs/mux"
 	"testing"
 )
 
@@ -17,7 +16,7 @@ func TestInit(t *testing.T) {
 }
 
 func TestRouteAttach(t *testing.T) {
-	r:=new(mux.Router)
+	r:=new(Router)
 	err := AttachRouter(r, "web", sbcontext)
 	if err != nil {
 		t.Error(err)

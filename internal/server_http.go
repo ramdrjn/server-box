@@ -37,6 +37,6 @@ func (s *ServerHttp) ShutDownServerInstance() error {
 	return err
 }
 
-func (s *ServerHttp) AttachRouter(router interface{}) error {
+func (s *ServerHttp) AttachRouter(router *Router) error {
 	return nil
 }
