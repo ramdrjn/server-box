@@ -40,6 +40,18 @@ func (r *Router) RegisterRoute(pattern string, methods string, handler routeHand
 	return nil
 }
 
+func (r *Router) GetRoutes() func() (string, route) {
+	var i int = 0
+	max := len(r.routes)
+	return func() (string, route) {
+		if i < max {
+			rou:=r.routes[i]
+			return rou.pattern, rou
+		}
+		return "", route{}
+	}
+}
+
 func NewRouter() *Router {
 	return new(Router)
 }

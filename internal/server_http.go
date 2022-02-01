@@ -1,7 +1,12 @@
 package serverbox
 
+import (
+	"net/http"
+)
+
 type ServerHttp struct {
 	server *Server
+	mux    *http.ServeMux
 }
 
 func (s *ServerHttp) InitializeServerInstance() error {
@@ -13,6 +18,9 @@ func (s *ServerHttp) InitializeServerInstance() error {
 	if err != nil {
 		return err
 	}
+
+	s.mux = http.NewServeMux()
+
 	err = s.server.state.ReportState("maintanence")
 	if err != nil {
 		return err
@@ -38,5 +46,11 @@ func (s *ServerHttp) ShutDownServerInstance() error {
 }
 
 func (s *ServerHttp) AttachRouter(router *Router) error {
+	next := router.GetRoutes()
+	pat, obj := next()
+	for pat != "" {
+		s.mux.Handle(pat, obj)
+		pat, obj = next()
+	}
 	return nil
 }

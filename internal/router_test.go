@@ -16,7 +16,15 @@ func testRouteHandler(args *HandlerArgs) {
 	}
 }
 
+var r *Router
+
 func TestRegisterRoute(t *testing.T) {
-	r := NewRouter()
+	r = NewRouter()
 	r.RegisterRoute("/test", "get", testRouteHandler, msg{"test-DONE"})
+}
+
+func TestGetRoute(t *testing.T) {
+	f:=r.GetRoutes()
+	t.Log("routes")
+	t.Log(f())
 }
