@@ -1,12 +1,17 @@
-package serverbox
+package mux
 
 import (
 	"net/http"
 	"strings"
 )
 
-type routeHandler func(userdata interface{}, res http.ResponseWriter,
-	req *http.Request)
+type HandlerArgs struct {
+	HttpRes  http.ResponseWriter
+	HttpReq  *http.Request
+	UserData interface{}
+}
+
+type routeHandler func(*HandlerArgs)
 
 type route struct {
 	userdata interface{}
@@ -17,25 +22,24 @@ type route struct {
 func (r route) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	f := r.handlers[req.Method]
 	if f != nil {
-		f(r.userdata, res, req)
+		f(&HandlerArgs{res, req, r.userdata})
 	}
 }
 
-type router struct {
+type Router struct {
 	routes []route
 }
 
-func (r *router) RegisterRoute(pattern string, methods string, handler routeHandler, userdata interface{}) error {
+func (r *Router) RegisterRoute(pattern string, methods string, handler routeHandler, userdata interface{}) error {
 	route := route{userdata: userdata, pattern: pattern}
 	route.handlers = make(map[string]routeHandler)
 	for _, method := range strings.Split(methods, ",") {
 		route.handlers[method] = handler
 	}
-	//mux.Handle(pattern, r)
 	r.routes = append(r.routes, route)
 	return nil
 }
 
-func NewRouter() *router {
-	return new(router)
+func NewRouter() *Router {
+	return new(Router)
 }

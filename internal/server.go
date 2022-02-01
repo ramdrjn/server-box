@@ -16,6 +16,7 @@ type serverInstance interface {
 	InitializeServerInstance() error
 	RunServerInstance() error
 	ShutDownServerInstance() error
+	AttachRouter(interface{}) error
 }
 
 type Server struct {
@@ -121,4 +122,10 @@ func ShutDownServers(sbc *SbContext) (err error) {
 		ShutDownState(&server.state)
 	}
 	return nil
+}
+
+func AttachRouter(router interface{}, serName string, sbc *SbContext) (err error) {
+	server := sbc.Servers[serName]
+	err = server.serverInstance.AttachRouter(router)
+	return err
 }

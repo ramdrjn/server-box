@@ -1,8 +1,7 @@
-package serverbox
+package mux
 
 import (
 	"fmt"
-	"net/http"
 	"testing"
 )
 
@@ -10,11 +9,10 @@ type msg struct {
 	reply string
 }
 
-func testRouteHandler(userdata interface{}, res http.ResponseWriter,
-	req *http.Request) {
-	s, ok := userdata.(msg)
+func testRouteHandler(args *HandlerArgs) {
+	s, ok := args.UserData.(msg)
 	if ok {
-		fmt.Fprintf(res, s.reply)
+		fmt.Fprintf(args.HttpRes, s.reply)
 	}
 }
 
