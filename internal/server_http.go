@@ -1,6 +1,7 @@
 package serverbox
 
 import (
+	"fmt"
 	"net/http"
 )
 
@@ -33,6 +34,12 @@ func (s *ServerHttp) RunServerInstance() error {
 	err := s.server.state.ReportState("up")
 	if err != nil {
 		return err
+	}
+	host := fmt.Sprintf("%s:%d", s.server.bindIp, s.server.bindPort)
+	err = http.ListenAndServe(host, s.mux)
+	if err != nil {
+		Log.Error(err)
+		s.server.state.ReportState("down")
 	}
 	return err
 }

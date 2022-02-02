@@ -24,7 +24,7 @@ func TestRegisterRoute(t *testing.T) {
 }
 
 func TestGetRoute(t *testing.T) {
-	f:=r.GetRoutes()
+	f := r.GetRoutes()
 	t.Log("routes")
 	t.Log(f())
 }

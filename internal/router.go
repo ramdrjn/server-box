@@ -45,7 +45,7 @@ func (r *Router) GetRoutes() func() (string, route) {
 	max := len(r.routes)
 	return func() (string, route) {
 		if i < max {
-			rou:=r.routes[i]
+			rou := r.routes[i]
 			return rou.pattern, rou
 		}
 		return "", route{}
