@@ -1,17 +1,22 @@
 package serverbox
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 )
 
 type ServerHttp struct {
-	server *Server
-	mux    *http.ServeMux
+	server     *Server
+	httpServer http.Server
 }
 
-func (s *ServerHttp) InitializeServerInstance() error {
-	err := s.server.stats.RegisterForStats()
+func (s *ServerHttp) InitializeServerInstance() (err error) {
+	s.httpServer.Addr = fmt.Sprintf("%s:%d", s.server.bindIp,
+		s.server.bindPort)
+	s.httpServer.Handler = http.NewServeMux()
+
+	err = s.server.stats.RegisterForStats()
 	if err != nil {
 		return err
 	}
@@ -19,8 +24,6 @@ func (s *ServerHttp) InitializeServerInstance() error {
 	if err != nil {
 		return err
 	}
-
-	s.mux = http.NewServeMux()
 
 	err = s.server.state.ReportState("maintanence")
 	if err != nil {
@@ -35,8 +38,8 @@ func (s *ServerHttp) RunServerInstance() error {
 	if err != nil {
 		return err
 	}
-	host := fmt.Sprintf("%s:%d", s.server.bindIp, s.server.bindPort)
-	err = http.ListenAndServe(host, s.mux)
+
+	err = s.httpServer.ListenAndServe()
 	if err != nil {
 		Log.Error(err)
 		s.server.state.ReportState("down")
@@ -49,14 +52,25 @@ func (s *ServerHttp) ShutDownServerInstance() error {
 	if err != nil {
 		return err
 	}
+	err = s.httpServer.Shutdown(context.TODO())
+	return err
+}
+
+func (s *ServerHttp) AbortServerInstance() error {
+	err := s.server.state.ReportState("down")
+	if err != nil {
+		return err
+	}
+	err = s.httpServer.Close()
 	return err
 }
 
 func (s *ServerHttp) AttachRouter(router *Router) error {
+	mux := s.httpServer.Handler.(*http.ServeMux)
 	next := router.GetRoutes()
 	pat, obj := next()
 	for pat != "" {
-		s.mux.Handle(pat, obj)
+		mux.Handle(pat, obj)
 		pat, obj = next()
 	}
 	return nil
