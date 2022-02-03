@@ -16,7 +16,7 @@ func testRouteHandler(args *HandlerArgs) {
 	}
 }
 
-var r *Router
+var r Router
 
 func TestRegisterRoute(t *testing.T) {
 	r = NewRouter()

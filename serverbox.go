@@ -43,3 +43,8 @@ func ShutDown(sbcontext *SbContext) (err error) {
 	err = ShutDownServers(sbcontext)
 	return err
 }
+
+func Abort(sbcontext *SbContext) (err error) {
+	err = AbortServers(sbcontext)
+	return err
+}

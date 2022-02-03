@@ -26,11 +26,17 @@ func (r route) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
-type Router struct {
+type Router interface {
+	RegisterRoute(pattern string, methods string, handler routeHandler,
+		userdata interface{}) error
+	GetRoutes() func() (string, route)
+}
+
+type router struct {
 	routes []route
 }
 
-func (r *Router) RegisterRoute(pattern string, methods string, handler routeHandler, userdata interface{}) error {
+func (r *router) RegisterRoute(pattern string, methods string, handler routeHandler, userdata interface{}) error {
 	route := route{userdata: userdata, pattern: pattern}
 	route.handlers = make(map[string]routeHandler)
 	for _, method := range strings.Split(methods, ",") {
@@ -40,7 +46,7 @@ func (r *Router) RegisterRoute(pattern string, methods string, handler routeHand
 	return nil
 }
 
-func (r *Router) GetRoutes() func() (string, route) {
+func (r *router) GetRoutes() func() (string, route) {
 	var i int = 0
 	max := len(r.routes)
 	return func() (string, route) {
@@ -52,6 +58,6 @@ func (r *Router) GetRoutes() func() (string, route) {
 	}
 }
 
-func NewRouter() *Router {
-	return new(Router)
+func NewRouter() Router {
+	return new(router)
 }

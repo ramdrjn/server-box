@@ -16,7 +16,8 @@ type serverInstance interface {
 	InitializeServerInstance() error
 	RunServerInstance() error
 	ShutDownServerInstance() error
-	AttachRouter(*Router) error
+	AbortServerInstance() error
+	AttachRouter(Router) error
 }
 
 type Server struct {
@@ -124,7 +125,16 @@ func ShutDownServers(sbc *SbContext) (err error) {
 	return nil
 }
 
-func AttachRouter(router *Router, serName string, sbc *SbContext) (err error) {
+func AbortServers(sbc *SbContext) (err error) {
+	for _, server := range sbc.Servers {
+		server.serverInstance.AbortServerInstance()
+		ShutDownStatistics(&server.stats)
+		ShutDownState(&server.state)
+	}
+	return nil
+}
+
+func AttachRouter(router Router, serName string, sbc *SbContext) (err error) {
 	server := sbc.Servers[serName]
 	if server != nil {
 		err = server.serverInstance.AttachRouter(router)

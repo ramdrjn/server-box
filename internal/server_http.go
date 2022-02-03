@@ -65,7 +65,7 @@ func (s *ServerHttp) AbortServerInstance() error {
 	return err
 }
 
-func (s *ServerHttp) AttachRouter(router *Router) error {
+func (s *ServerHttp) AttachRouter(router Router) error {
 	mux := s.httpServer.Handler.(*http.ServeMux)
 	next := router.GetRoutes()
 	pat, obj := next()
