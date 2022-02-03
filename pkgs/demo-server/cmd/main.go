@@ -3,13 +3,15 @@ package main
 import (
 	"fmt"
 	sb "github.com/ramdrjn/serverbox"
+	"github.com/ramdrjn/serverbox/pkgs/mux"
 )
 
 type msg struct {
 	reply string
 }
 
-func testRouteHandler(args *sb.HandlerArgs) {
+func testRouteHandler(args *mux.HandlerArgs) {
+	fmt.Println("Inside")
         s, ok := args.UserData.(msg)
         if ok {
                 fmt.Fprintf(args.HttpRes, s.reply)
@@ -21,8 +23,8 @@ func main() {
 	if err != nil {
 		ctx.Log.Error(err)
 	}
-	r := sb.NewRouter()
-	r.RegisterRoute("/test", "get", testRouteHandler, msg{"test-DONE"})
+	r := mux.NewRouter()
+	r.RegisterRoute("/test", "GET", testRouteHandler, msg{"test-DONE"})
         err = sb.AttachRouter(r, "web", ctx)
         if err != nil {
 		ctx.Log.Error(err)

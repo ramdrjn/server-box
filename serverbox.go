@@ -4,6 +4,7 @@ import (
 	"fmt"
 	. "github.com/ramdrjn/serverbox/internal"
 	"github.com/ramdrjn/serverbox/pkgs/common"
+	"github.com/ramdrjn/serverbox/pkgs/mux"
 )
 
 func Initialize(debug bool, confFilePath string) (sbcontext *SbContext, err error) {
@@ -47,4 +48,8 @@ func ShutDown(sbcontext *SbContext) (err error) {
 func Abort(sbcontext *SbContext) (err error) {
 	err = AbortServers(sbcontext)
 	return err
+}
+
+func AttachRouter(router mux.Router, serName string, sbc *SbContext) error {
+	return AttachRouterToServer(router, serName, sbc)
 }

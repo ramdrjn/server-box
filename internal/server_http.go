@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"github.com/ramdrjn/serverbox/pkgs/mux"
 )
 
 type ServerHttp struct {
@@ -65,7 +66,7 @@ func (s *ServerHttp) AbortServerInstance() error {
 	return err
 }
 
-func (s *ServerHttp) AttachRouter(router Router) error {
+func (s *ServerHttp) AttachRouterServerInstance(router mux.Router) error {
 	mux := s.httpServer.Handler.(*http.ServeMux)
 	next := router.GetRoutes()
 	pat, obj := next()

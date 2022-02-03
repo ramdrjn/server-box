@@ -1,4 +1,4 @@
-package serverbox
+package mux
 
 import (
 	"fmt"

@@ -3,6 +3,7 @@ package serverbox
 import (
 	. "github.com/ramdrjn/serverbox/internal"
 	"testing"
+	"github.com/ramdrjn/serverbox/pkgs/mux"
 )
 
 var sbcontext *SbContext
@@ -16,8 +17,8 @@ func TestInit(t *testing.T) {
 }
 
 func TestRouteAttach(t *testing.T) {
-	r := NewRouter()
-	err := AttachRouter(r, "web", sbcontext)
+	r := mux.NewRouter()
+	err := RouterAttach(r, "web", sbcontext)
 	if err != nil {
 		t.Error(err)
 	}

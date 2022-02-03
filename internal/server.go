@@ -3,6 +3,7 @@ package serverbox
 import (
 	"errors"
 	"fmt"
+	"github.com/ramdrjn/serverbox/pkgs/mux"
 )
 
 type ServerType uint8
@@ -17,7 +18,7 @@ type serverInstance interface {
 	RunServerInstance() error
 	ShutDownServerInstance() error
 	AbortServerInstance() error
-	AttachRouter(Router) error
+	AttachRouterServerInstance(mux.Router) error
 }
 
 type Server struct {
@@ -134,10 +135,10 @@ func AbortServers(sbc *SbContext) (err error) {
 	return nil
 }
 
-func AttachRouter(router Router, serName string, sbc *SbContext) (err error) {
+func AttachRouterToServer(router mux.Router, serName string, sbc *SbContext) (err error) {
 	server := sbc.Servers[serName]
 	if server != nil {
-		err = server.serverInstance.AttachRouter(router)
+		err = server.serverInstance.AttachRouterServerInstance(router)
 	}
 	return err
 }

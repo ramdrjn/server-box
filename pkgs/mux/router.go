@@ -1,6 +1,7 @@
-package serverbox
+package mux
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 )
@@ -52,6 +53,7 @@ func (r *router) GetRoutes() func() (string, route) {
 	return func() (string, route) {
 		if i < max {
 			rou := r.routes[i]
+			i++
 			return rou.pattern, rou
 		}
 		return "", route{}
