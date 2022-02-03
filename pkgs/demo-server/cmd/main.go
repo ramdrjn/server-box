@@ -11,7 +11,6 @@ type msg struct {
 }
 
 func testRouteHandler(args *mux.HandlerArgs) {
-	fmt.Println("Inside")
         s, ok := args.UserData.(msg)
         if ok {
                 fmt.Fprintf(args.HttpRes, s.reply)

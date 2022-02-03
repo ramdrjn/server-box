@@ -18,7 +18,7 @@ func TestInit(t *testing.T) {
 
 func TestRouteAttach(t *testing.T) {
 	r := mux.NewRouter()
-	err := RouterAttach(r, "web", sbcontext)
+	err := AttachRouter(r, "web", sbcontext)
 	if err != nil {
 		t.Error(err)
 	}
