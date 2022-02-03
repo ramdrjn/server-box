@@ -16,7 +16,7 @@ func TestInit(t *testing.T) {
 }
 
 func TestRouteAttach(t *testing.T) {
-	r := new(Router)
+	r := NewRouter()
 	err := AttachRouter(r, "web", sbcontext)
 	if err != nil {
 		t.Error(err)
