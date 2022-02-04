@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"flag"
 	sb "github.com/ramdrjn/serverbox"
 	"github.com/ramdrjn/serverbox/pkgs/mux"
 )
@@ -18,7 +19,9 @@ func testRouteHandler(args *mux.HandlerArgs) {
 }
 
 func main() {
-	ctx, err := sb.Initialize(true, "../../internal/sample.conf")
+	debug:=flag.Bool("debug", false, "set true to enable debug mode")
+	confFile:=flag.String("conf", "./sample.conf", "path of configuration file")
+	ctx, err := sb.Initialize(*debug, *confFile)
 	if err != nil {
 		ctx.Log.Error(err)
 	}
