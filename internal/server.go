@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/ramdrjn/serverbox/pkgs/mux"
+	"sync"
 )
 
 type ServerType uint8
@@ -107,22 +108,27 @@ func InitializeServers(sbc *SbContext) (err error) {
 	return err
 }
 
-func RunServers(sbc *SbContext) (err error) {
+func RunServers(sbc *SbContext) error {
 	for _, server := range sbc.Servers {
-		err = server.serverInstance.RunServerInstance()
-		if err != nil {
-			break
-		}
+		go server.serverInstance.RunServerInstance()
 	}
-	return err
+	return nil
 }
 
-func ShutDownServers(sbc *SbContext) (err error) {
+func ShutDownServers(sbc *SbContext) error {
+	var wg sync.WaitGroup
 	for _, server := range sbc.Servers {
-		server.serverInstance.ShutDownServerInstance()
-		ShutDownStatistics(&server.stats)
-		ShutDownState(&server.state)
+		// Increment the WaitGroup counter.
+		wg.Add(1)
+		go func() {
+			server.serverInstance.ShutDownServerInstance()
+			ShutDownStatistics(&server.stats)
+			ShutDownState(&server.state)
+			wg.Done()
+		}()
 	}
+	// Wait for all HTTP fetches to complete.
+	wg.Wait()
 	return nil
 }
 

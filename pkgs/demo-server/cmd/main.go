@@ -11,10 +11,10 @@ type msg struct {
 }
 
 func testRouteHandler(args *mux.HandlerArgs) {
-        s, ok := args.UserData.(msg)
-        if ok {
-                fmt.Fprintf(args.HttpRes, s.reply)
-        }
+	s, ok := args.UserData.(msg)
+	if ok {
+		fmt.Fprintf(args.HttpRes, s.reply)
+	}
 }
 
 func main() {
@@ -22,18 +22,16 @@ func main() {
 	if err != nil {
 		ctx.Log.Error(err)
 	}
+	sb.SetupSignalHandlers(ctx)
 	r := mux.NewRouter()
 	r.RegisterRoute("/test", "GET", testRouteHandler, msg{"test-DONE"})
-        err = sb.AttachRouter(r, "web", ctx)
-        if err != nil {
+	err = sb.AttachRouter(r, "web", ctx)
+	if err != nil {
 		ctx.Log.Error(err)
-        }
+	}
 	err = sb.Run(ctx)
 	if err != nil {
 		ctx.Log.Error(err)
 	}
-	err = sb.ShutDown(ctx)
-	if err != nil {
-		ctx.Log.Error(err)
-	}
+	sb.BlockAndHandleSignal(ctx)
 }

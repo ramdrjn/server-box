@@ -2,12 +2,14 @@ package serverbox
 
 import (
 	"github.com/ramdrjn/serverbox/pkgs/common"
+	"os"
 )
 
 type SbContext struct {
-	Log     common.Logger
-	Conf    serverBoxConf
-	Servers map[string]*Server
+	Log           common.Logger
+	Conf          serverBoxConf
+	Servers       map[string]*Server
+	SignalChannel chan os.Signal
 }
 
 var Log common.Logger

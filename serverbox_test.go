@@ -2,8 +2,8 @@ package serverbox
 
 import (
 	. "github.com/ramdrjn/serverbox/internal"
-	"testing"
 	"github.com/ramdrjn/serverbox/pkgs/mux"
+	"testing"
 )
 
 var sbcontext *SbContext

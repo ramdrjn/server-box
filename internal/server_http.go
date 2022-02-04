@@ -3,8 +3,8 @@ package serverbox
 import (
 	"context"
 	"fmt"
-	"net/http"
 	"github.com/ramdrjn/serverbox/pkgs/mux"
+	"net/http"
 )
 
 type ServerHttp struct {
