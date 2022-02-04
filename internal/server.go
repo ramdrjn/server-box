@@ -3,6 +3,8 @@ package serverbox
 import (
 	"errors"
 	"fmt"
+	"github.com/ramdrjn/serverbox/pkgs/mux"
+	"sync"
 )
 
 type ServerType uint8
@@ -16,6 +18,8 @@ type serverInstance interface {
 	InitializeServerInstance() error
 	RunServerInstance() error
 	ShutDownServerInstance() error
+	AbortServerInstance() error
+	AttachRouterServerInstance(mux.Router) error
 }
 
 type Server struct {
@@ -104,21 +108,43 @@ func InitializeServers(sbc *SbContext) (err error) {
 	return err
 }
 
-func RunServers(sbc *SbContext) (err error) {
+func RunServers(sbc *SbContext) error {
 	for _, server := range sbc.Servers {
-		err = server.serverInstance.RunServerInstance()
-		if err != nil {
-			break
-		}
+		go server.serverInstance.RunServerInstance()
 	}
-	return err
+	return nil
 }
 
-func ShutDownServers(sbc *SbContext) (err error) {
+func ShutDownServers(sbc *SbContext) error {
+	var wg sync.WaitGroup
 	for _, server := range sbc.Servers {
-		server.serverInstance.ShutDownServerInstance()
+		// Increment the WaitGroup counter.
+		wg.Add(1)
+		go func() {
+			server.serverInstance.ShutDownServerInstance()
+			ShutDownStatistics(&server.stats)
+			ShutDownState(&server.state)
+			wg.Done()
+		}()
+	}
+	// Wait for all HTTP fetches to complete.
+	wg.Wait()
+	return nil
+}
+
+func AbortServers(sbc *SbContext) (err error) {
+	for _, server := range sbc.Servers {
+		server.serverInstance.AbortServerInstance()
 		ShutDownStatistics(&server.stats)
 		ShutDownState(&server.state)
 	}
 	return nil
+}
+
+func AttachRouterToServer(router mux.Router, serName string, sbc *SbContext) (err error) {
+	server := sbc.Servers[serName]
+	if server != nil {
+		err = server.serverInstance.AttachRouterServerInstance(router)
+	}
+	return err
 }
