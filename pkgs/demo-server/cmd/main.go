@@ -27,7 +27,7 @@ func main() {
 	}
 	sb.SetupSignalHandlers(ctx)
 	r := mux.NewRouter()
-	r.RegisterRoute("/test", "GET", testRouteHandler, msg{"test-DONE"})
+	r.RegisterRoute("/test", "get", testRouteHandler, msg{"test-DONE"})
 	err = sb.AttachRouter(r, "web", ctx)
 	if err != nil {
 		ctx.Log.Error(err)
