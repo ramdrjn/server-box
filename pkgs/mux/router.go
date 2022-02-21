@@ -1,6 +1,7 @@
 package mux
 
 import (
+	"errors"
 	"net/http"
 	"strings"
 )
@@ -36,11 +37,30 @@ type router struct {
 	routes []route
 }
 
+func convertMethod(method string) (string, error) {
+	switch method {
+	case "get":
+		return http.MethodGet, nil
+	case "post":
+		return http.MethodPost, nil
+	case "put":
+		return http.MethodPut, nil
+	case "delete":
+		return http.MethodDelete, nil
+	}
+	return "", errors.New("invalid server type")
+}
+
 func (r *router) RegisterRoute(pattern string, methods string, handler routeHandler, userdata interface{}) error {
 	route := route{userdata: userdata, pattern: pattern}
 	route.handlers = make(map[string]routeHandler)
 	for _, method := range strings.Split(methods, ",") {
-		route.handlers[method] = handler
+		meth, err := convertMethod(method)
+		if err == nil {
+			route.handlers[meth] = handler
+		} else {
+			return err
+		}
 	}
 	r.routes = append(r.routes, route)
 	return nil
