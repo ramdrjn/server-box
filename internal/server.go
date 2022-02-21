@@ -15,7 +15,7 @@ const (
 )
 
 type serverInstance interface {
-	InitializeServerInstance() error
+	InitializeServerInstance(ServerConfigurations) error
 	RunServerInstance() error
 	ShutDownServerInstance() error
 	AbortServerInstance() error
@@ -97,7 +97,7 @@ func InitializeServers(sbc *SbContext) (err error) {
 			break
 		}
 
-		err = server.serverInstance.InitializeServerInstance()
+		err = server.serverInstance.InitializeServerInstance(serverConf.Configurations)
 		if err != nil {
 			break
 		}

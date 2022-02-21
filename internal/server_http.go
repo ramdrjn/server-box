@@ -12,7 +12,7 @@ type ServerHttp struct {
 	httpServer http.Server
 }
 
-func (s *ServerHttp) InitializeServerInstance() (err error) {
+func (s *ServerHttp) InitializeServerInstance(sc ServerConfigurations) (err error) {
 	s.httpServer.Addr = fmt.Sprintf("%s:%d", s.server.bindIp,
 		s.server.bindPort)
 	s.httpServer.Handler = http.NewServeMux()
@@ -29,6 +29,21 @@ func (s *ServerHttp) InitializeServerInstance() (err error) {
 	err = s.server.state.ReportState("maintanence")
 	if err != nil {
 		return err
+	}
+
+	if sc.Http.Enabled {
+		if sc.Http.Static_path != "" {
+			mux := s.httpServer.Handler.(*http.ServeMux)
+			fs := http.FileServer(http.Dir(sc.Http.Static_dir))
+			if sc.Http.Strip_path != "" {
+				mux.Handle(sc.Http.Static_path,
+					http.StripPrefix(sc.Http.Strip_path, fs))
+				Log.Infof("http mux set for file url path: %s with local directory path %s and strip prefix of %s", sc.Http.Static_path, sc.Http.Static_dir, sc.Http.Strip_path)
+			} else {
+				mux.Handle(sc.Http.Static_path, fs)
+				Log.Infof("http mux set for file url path: %s with local directory path %s", sc.Http.Static_path, sc.Http.Static_dir)
+			}
+		}
 	}
 
 	return nil

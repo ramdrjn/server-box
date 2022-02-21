@@ -1,6 +1,7 @@
 package mux
 
 import (
+	"errors"
 	"net/http"
 	"strings"
 )
@@ -54,8 +55,12 @@ func (r *router) RegisterRoute(pattern string, methods string, handler routeHand
 	route := route{userdata: userdata, pattern: pattern}
 	route.handlers = make(map[string]routeHandler)
 	for _, method := range strings.Split(methods, ",") {
-		meth := convertMethod(method)
-		route.handlers[meth] = handler
+		meth, err := convertMethod(method)
+		if err == nil {
+			route.handlers[meth] = handler
+		} else {
+			return err
+		}
 	}
 	r.routes = append(r.routes, route)
 	return nil
